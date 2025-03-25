@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block pagetitle %}{% endblock %} - Roel's Notebook</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100">
+    <header class=" lg:fixed w-full flex justify-center">
+        <nav
+            class="w-screen  lg:w-4xl xl:w-6xl 2xl:w-7xl text-zinc-700 flex justify-between py-3 px-6 shadow lg:rounded-2xl backdrop-blur-md bg-transparent sm:m-0 lg:my-6">
+            <a class="text-2xl font-medium opacity-75">Roel's Notebook</a>
+
+            <a class="text-zinc-700 opacity-75">{% block aboutpage %}{% endblock %}</a>
+        </nav>
+    </header>
+
+    <main class="w-full min-h-160 md:pt-20 lg:p-20 lg:pt-30">
+        <section class="lg:shadow p-15 lg:rounded-3xl">
+            <h2 class="font-medium text-3xl">{% block stitle %}{% endblock %}</h2>
+            <hr class="border-gray-400 my-6 h-px">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 flex justify-center items-center h-20 w-full">
+        <p class="text-white text-center">All rights reserved © - Pedro Eduardo Roel</p>
+    </footer>
+</body>
+
+</html>
