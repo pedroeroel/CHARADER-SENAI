@@ -1,15 +1,27 @@
 async function getCharade(id) {
     try {
-        const url = `charader-senai-git-main-roels-projects-4fd57707.vercel.app/charades`;
+        const url = `https://charader-senai.vercel.app/api/charades`;
 
-        const response = (id) ? await fetch((url+id)) : await fetch(url) ;
+        const response = id ? await fetch(`${url}${id}`) : await fetch(url) ;
         const data = await response.json();
         console.log(data);
+
+        const charadeField = document.querySelector('#charadeField')
+
     }
 
     catch (e) {
         console.log(e)
     }
 
-    return ''
+    finally {
+        if (data) {
+            
+            charadeField.querySelector('#charade').value = data.charade
+
+        }
+    
+    return data
+
+    }
 }
