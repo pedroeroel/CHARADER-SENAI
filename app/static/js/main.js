@@ -1,26 +1,70 @@
-async function getCharade(id) {
+let data = undefined
+const userAnswer = document.querySelector("#userAnswer") ;
+const resultElement = document.querySelector("#answerResult") ;
+
+async function getCharade() {
     try {
+        
+        document.querySelector('#charade').style.color = 'transparent';
+        resultElement.style.color = 'transparent'
+        userAnswer.value = ''
         const url = `https://charader-senai.vercel.app/api/charades`;
+        const id = document.querySelector('#charadeId').value || false
+        
+        const response = id ? await fetch(`${url}/${id}`) : await fetch(url) ;
+        
+        data = await response.json();
 
-        const response = id ? await fetch(`${url}${id}`) : await fetch(url) ;
-        const data = await response.json();
-        console.log(data);
+        document.querySelector('#charade').innerHTML = JSON.stringify(data.charade)
+        console.log(data.charade)
 
+        document.querySelector('#charade').style.transition = "color 200ms ease-in-out";
+
+        setTimeout(() => {
+            document.querySelector('#charade').style.color = "black";
+        }, 200);
+
+        resultElement.style.transition = "color 200ms ease-in-out";
+
+        document.querySelector('#verifyButton').onclick = verifyAnswer
         
     }
     
     catch (e) {
         console.log(e)
     }
-    
-    finally {
-        if (data) {
-            const charadeField = document.querySelector('#charadeField')
-            charadeField.querySelector('#charade').value = data.charade
 
-        }
-    
     return data
+}
 
+function verifyAnswer() {
+    const currentAnswer = (JSON.stringify(data.responses[0].response)).replaceAll('"', '');
+    
+    console.log(currentAnswer)
+    console.log(userAnswer.value)
+    
+    resultElement.style.transition = "color 500ms ease-in-out";
+
+
+    if (userAnswer.value.toLowerCase() == currentAnswer.toLowerCase()) {
+
+        resultElement.textContent = "Correct!" ;
+        resultElement.style.color = "green" ;
+        document.querySelector('#charade').style.color = "green" ;
+    } else {
+        resultElement.textContent = "Incorrect. Try again!" ;
+        resultElement.style.color = "red" ;
+        document.querySelector('#charade').style.color = "red" ;
     }
 }
+
+function revealAnswer() {
+    const currentAnswer = (JSON.stringify(data.responses[0].response)).replaceAll('"', '');
+
+    resultElement.textContent = `The answer was ${currentAnswer.toLowerCase()}.` ;
+    document.querySelector('#charade').style.color = 'black';
+    resultElement.style.color = "green" ;
+    document.querySelector('#verifyButton').onclick = '' 
+}
+
+getCharade()
