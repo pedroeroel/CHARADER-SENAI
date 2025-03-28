@@ -215,18 +215,18 @@ charades = [
 allowed_origins = ['https://charader-senai.vercel.app/',
                    'http://127.0.0.1:5000']
 
+CORS(api, resources={r"/*": {'origins': allowed_origins}})
+
 @api.route('/status', methods=['GET'])
 def status():
     return 'The API is currently online.', 200
 
 @api.route('/api/charades', methods=['GET'])
 def random_charade():
-    CORS(api, resources={r"/*": {'origins': allowed_origins}})
     return jsonify(random.choice(charades))
 
 @api.route('/api/charades/<int:id>', methods=['GET'])
 def charade(id):
-    CORS(api, resources={r"/*": {'origins': allowed_origins}})
     if request.method == 'GET':
             
         for charade in charades:

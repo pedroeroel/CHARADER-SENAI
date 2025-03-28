@@ -6,17 +6,16 @@ async function getCharade(id) {
         const data = await response.json();
         console.log(data);
 
-        const charadeField = document.querySelector('#charadeField')
-
+        
     }
-
+    
     catch (e) {
         console.log(e)
     }
-
+    
     finally {
         if (data) {
-            
+            const charadeField = document.querySelector('#charadeField')
             charadeField.querySelector('#charade').value = data.charade
 
         }
