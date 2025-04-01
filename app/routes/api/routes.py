@@ -1,12 +1,14 @@
 from flask import Flask, Blueprint, render_template, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
+import os
 import random
 from flask_cors import CORS
 
 api = Blueprint('api', __name__, template_folder='templates', )
 
-cred = credentials.Certificate("app/routes/api/static/key/serviceAccountKey.json")
+cred = os.environ.get('serviceAccountKey', credentials.Certificate("app/routes/api/static/key/serviceAccountKey.json"))
+
 firebase_admin.initialize_app(cred) 
 
 db = firestore.client()

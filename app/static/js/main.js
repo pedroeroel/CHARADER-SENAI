@@ -8,7 +8,7 @@ async function getCharade() {
         document.querySelector('#charade').style.color = 'transparent';
         resultElement.style.color = 'transparent'
         userAnswer.value = ''
-        const url = `http://127.0.0.1:5000/api/charades`;
+        const url = `https://charader-senai.vercel.app/api/charades`;
         const id = document.querySelector('#charadeId').value || false
         
         const response = id ? await fetch(`${url}/${id}`) : await fetch(url) ;
