@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint
+import secrets
 from app.routes.main.routes import main
 from app.routes.api.routes import api
 from app.config import SECRET_KEY
