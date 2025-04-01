@@ -43,7 +43,8 @@ function verifyAnswer() {
     console.log(currentAnswer)
     console.log(userAnswer.value)
     
-    resultElement.style.transition = "color 500ms ease-in-out";
+    resultElement.style.transition = "color 200ms ease-in-out";
+    resultElement.style.transition += "opacity 200ms ease-in-out";
 
 
     if (userAnswer.value.toLowerCase() == currentAnswer.toLowerCase()) {
@@ -60,10 +61,17 @@ function verifyAnswer() {
 
 function revealAnswer() {
     const currentAnswer = (JSON.stringify(data.responses[0].response)).replaceAll('"', '');
-
-    resultElement.textContent = `The answer was ${currentAnswer.toLowerCase()}.` ;
+    
+    resultElement.style.color = 'transparent'
+    resultElement.style.opacity = 0 ;
+    
     document.querySelector('#charade').style.color = 'black';
-    resultElement.style.color = "green" ;
+    
+    setTimeout(() => {
+        resultElement.textContent = `The answer was ${currentAnswer.toLowerCase()}.` ;
+        resultElement.style.opacity = 1;
+        resultElement.style.color = "green";
+        }, 200);
     document.querySelector('#verifyButton').onclick = '' 
 }
 
