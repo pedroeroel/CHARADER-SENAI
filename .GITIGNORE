@@ -1,2 +1,2 @@
 app/routes/api/key/serviceAccountKey.json
-venv
+../venv
