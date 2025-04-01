@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 api = Blueprint('api', __name__, template_folder='templates', )
 
-cred = os.environ.get('serviceAccountKey', credentials.Certificate("app/routes/api/static/key/serviceAccountKey.json"))
+cred = os.environ.get('serviceAccountKey', (credentials.Certificate("app/routes/api/key/serviceAccountKey.json")))
 
 firebase_admin.initialize_app(cred) 
 
