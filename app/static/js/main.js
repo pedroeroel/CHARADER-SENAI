@@ -8,7 +8,7 @@ async function getCharade() {
         document.querySelector('#charade').style.color = 'transparent';
         resultElement.style.color = 'transparent'
         userAnswer.value = ''
-        const url = `https://charader-senai.vercel.app/api/charades`;
+        const url = `http://127.0.0.1:5000/api/charades`;
         const id = document.querySelector('#charadeId').value || false
         
         const response = id ? await fetch(`${url}/${id}`) : await fetch(url) ;
@@ -38,7 +38,7 @@ async function getCharade() {
 }
 
 function verifyAnswer() {
-    const currentAnswer = (JSON.stringify(data.responses[0].response)).replaceAll('"', '');
+    const currentAnswer = (JSON.stringify(data.answer)).replaceAll('"', '');
     
     console.log(currentAnswer)
     console.log(userAnswer.value)
@@ -60,7 +60,7 @@ function verifyAnswer() {
 }
 
 function revealAnswer() {
-    const currentAnswer = (JSON.stringify(data.responses[0].response)).replaceAll('"', '');
+    const currentAnswer = (JSON.stringify(data.answer)).replaceAll('"', '');
     
     resultElement.style.color = 'transparent'
     resultElement.style.opacity = 0 ;
