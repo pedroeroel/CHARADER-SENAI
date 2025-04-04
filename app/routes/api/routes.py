@@ -4,13 +4,28 @@ from firebase_admin import credentials, firestore
 import os
 import random
 from flask_cors import CORS
+import json
 
 api = Blueprint('api', __name__, template_folder='templates', )
 
-serviceAccountKey = jsonify(os.environ.get('serviceAccountKey')) or 'app/routes/api/key/serviceAccountKey.json'
-cred = credentials.Certificate(serviceAccountKey)
+serviceAccountKeyContent = os.environ.get('serviceAccountKey')
+serviceAccountKeyPath = 'app/routes/api/key/serviceAccountKey.json'
 
-firebase_admin.initialize_app(cred) 
+if serviceAccountKeyContent:
+    cred = credentials.Certificate(json.loads(serviceAccountKeyContent))
+elif serviceAccountKeyPath:
+    cred = credentials.Certificate(serviceAccountKeyPath)
+else:
+    print('Error: serviceAccountKey not found.')
+
+    cred = None
+
+
+if cred:
+    firebase_admin.initialize_app(cred)
+
+else:
+    print("Firebase Admin SDK couldn't initialized.")
 
 db = firestore.client()
 
