@@ -147,7 +147,7 @@ def edit_charade(id):
             new_data = {'answer': userAnswer, 'charade': userCharade}
             document.update(new_data)
         
-            e = None
+            e = False
 
         except Exception as e:
             print(f'Back-End Error: {e}')
