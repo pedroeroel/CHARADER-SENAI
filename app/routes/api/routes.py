@@ -106,8 +106,8 @@ def new_charade():
 @api.route('/api/delete-charade/<int:id>', methods=['GET'])
 def delete_charade(id):
     try:
-        charade_ref = db.collection('charades').document(str(id)) # Get a reference to the document
-        charade_doc = charade_ref.get() # Try to get the document
+        charade_ref = db.collection('charades').document(str(id))
+        charade_doc = charade_ref.get()
 
         if charade_doc.exists:
             charade_ref.delete()
