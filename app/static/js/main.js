@@ -1,16 +1,18 @@
 let data = undefined
 const userAnswer = document.querySelector("#userAnswer") ;
-const resultElement = document.querySelector("#answerResult") ;
+const resultElement = document.querySelector("#resultElement") ;
+let edit = false
 
 async function getCharade() {
     try {
 
         document.querySelector('#charade').style.color = 'transparent';
         resultElement.style.color = 'transparent'
-        userAnswer.value = ''
+        if (edit != true) {
+            userAnswer.value = ''
+        } ;
         const url = `https://charader-senai.vercel.app/api/charades`;
-        const id = charade_id ? charade_id : document.querySelector('#charadeId').value || false
-
+        const id = document.querySelector('#charadeId').value || false
         const response = id ? await fetch(`${url}/${id}`) : await fetch(url) ;
         
         data = await response.json();
@@ -73,6 +75,13 @@ function revealAnswer() {
         resultElement.style.color = "green";
         }, 200);
     document.querySelector('#verifyButton').onclick = '' 
+}
+
+function revealResult() {
+
+    resultElement.style.color = 'black'
+    resultElement.style.opacity = 1 ;
+
 }
 
 getCharade()

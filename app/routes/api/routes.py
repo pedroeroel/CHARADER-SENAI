@@ -70,11 +70,8 @@ def charade(id):
 @api.route('/api/new-charade', methods=['GET', 'POST'])
 def new_charade():
     if request.method == 'GET':
-
-        return render_template('charade-manipulation')
-
+        return render_template('charade-manipulation.html')
     elif request.method == 'POST':
-
         userCharade = request.form.get('userCharade')
         userAnswer = request.form.get('userAnswer')
 
@@ -84,50 +81,58 @@ def new_charade():
         for charade in charadeList:
             charades.append(charade.to_dict())
 
-        currentID = 0
+        charades.sort(key=lambda charade: int(charade['id']))
+
+        newID = 1
 
         for charade in charades:
-            previousID = currentID
-            currentID = int(charade['id'])
-
-            if (currentID - previousID) > 1:
-                newID = previousID + 1
+            if int(charade['id']) == newID:
+                newID += 1
+            elif int(charade['id']) > newID:
                 break
-            else:
-                newID = currentID + 1
 
         try:
-                
             register = db.collection("charades").document(f"{newID}")
-            register.set({'answer': userAnswer, 'id': newID, 'charade': userCharade})
-        
+            register.set({'answer': userAnswer, 'id': str(newID), 'charade': userCharade})
             e = None
-
         except Exception as e:
             print(f'Back-End Error: {e}')
-
         finally:
- 
             if not e:
-                return render_template('charade-manipulation', msg=f'Charade registered at ID {newID}!')
-            
+                return render_template('charade-manipulation.html', msg=f'Charade registered at ID {newID}!')
             else:
-                return render_template('charade-manipulation', msg=f'ERROR: Something went wrong.')
+                return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
             
-@api.route('/api/delete-charade/<int:id>', methods=['DELETE',])
+@api.route('/api/delete-charade/<int:id>', methods=['GET',])
 def delete_charade(id):
 
-    if request.method != 'DELETE':
-        return redirect('/api/new-charade')
-
     try:
+        charades = []
+        charadeList = db.collection('charades').stream()
+
+        for charade in charadeList:
+            charades.append(charade.to_dict())
+            if charades[id-1]['id'] == id:
+                charade=True
+                break
+            else:
+                charade=False
+
+        print(charades)
+
+        charades.sort(key=lambda charade: int(charade['id']))
+        
         db.collection('charades').document(f'{id}').delete()
 
     except Exception as e:
         print(f'Error at deletion: {e}')
-        return render_template('charade-manipulation', msg=f'{e}')
 
-    return render_template('charade-manipulation', msg='Charade deleted!')
+    if charade == True:
+        
+        return render_template('charade-manipulation.html', msg='Charade deleted!')
+
+    else:
+        return render_template('charade-manipulation.html', msg='Error at deletion.')
 
 @api.route('/api/edit-charade/<int:id>')
 def edit_charade(id):
@@ -144,7 +149,7 @@ def edit_charade(id):
                 charade = charade
                 break
         
-        return render_template('charade-manipulation', charade_id=id, charade=charade['charade'], answer=charade['answer'])
+        return render_template('charade-manipulation.html', charade_id=id, charade=charade['charade'], answer=charade['answer'])
 
     elif request.method == 'POST':
 
@@ -165,7 +170,7 @@ def edit_charade(id):
         finally:
  
             if not e:
-                return render_template('charade-manipulation', msg=f'Charade edited at ID {id}!')
+                return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
             
             else:
-                return render_template('charade-manipulation', msg=f'ERROR: Something went wrong.')
+                return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
