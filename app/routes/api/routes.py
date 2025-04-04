@@ -142,7 +142,7 @@ def edit_charade(id):
         userAnswer = request.form.get('userAnswer')
 
         try:
-            document = db.collection('charades').document(id)
+            document = db.collection('charades').document(f'{id}')
             
             new_data = {'answer': userAnswer, 'charade': userCharade}
             document.update(new_data)
