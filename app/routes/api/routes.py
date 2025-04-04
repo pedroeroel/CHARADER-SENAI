@@ -107,6 +107,7 @@ def new_charade():
 def delete_charade(id):
 
     try:
+        db.collection('charades').document(f'{id}').delete()
         charades = []
         charadeList = db.collection('charades').stream()
 
@@ -122,7 +123,6 @@ def delete_charade(id):
 
         charades.sort(key=lambda charade: int(charade['id']))
         
-        db.collection('charades').document(f'{id}').delete()
 
     except Exception as e:
         print(f'Error at deletion: {e}')
