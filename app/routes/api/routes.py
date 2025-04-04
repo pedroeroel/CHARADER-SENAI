@@ -119,7 +119,7 @@ def delete_charade(id):
         print(f'Error at deletion: {e}')
         return render_template('charade-manipulation.html', msg='Error during deletion.')
 
-@api.route('/api/edit-charade/<int:id>')
+@api.route('/api/edit-charade/<int:id>', methods=['POST', 'GET'])
 def edit_charade(id):
     if request.method == 'GET':
 
