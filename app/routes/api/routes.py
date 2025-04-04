@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, jsonify
+from flask import Flask, Blueprint, render_template, request, jsonify, redirect
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
@@ -71,7 +71,7 @@ def charade(id):
 def new_charade():
     if request.method == 'GET':
 
-        return render_template('new-charade.html')
+        return render_template('charade-manipulation')
 
     elif request.method == 'POST':
 
@@ -109,8 +109,63 @@ def new_charade():
         finally:
  
             if not e:
-                return render_template('new-charade.html', msg=f'Charade registered in the ID {newID}!')
+                return render_template('charade-manipulation', msg=f'Charade registered at ID {newID}!')
             
             else:
-                return render_template('new-charade.html', msg=f'ERROR: Something went wrong.')
+                return render_template('charade-manipulation', msg=f'ERROR: Something went wrong.')
             
+@api.route('/api/delete-charade/<int:id>', methods=['DELETE',])
+def delete_charade(id):
+
+    if request.method != 'DELETE':
+        return redirect('/api/new-charade')
+
+    try:
+        db.collection('charades').document(f'{id}').delete()
+
+    except Exception as e:
+        print(f'Error at deletion: {e}')
+        return render_template('charade-manipulation', msg=f'{e}')
+
+    return render_template('charade-manipulation', msg='Charade deleted!')
+
+@api.route('/api/edit-charade/<int:id>')
+def edit_charade(id):
+    if request.method == 'GET':
+
+        charades = []
+        charadeList = db.collection('charades').stream()
+
+        for charade in charadeList:
+            charades.append(charade.to_dict())
+
+        for charade in charades:
+            if charade['id'] == id:
+                charade = charade
+                break
+        
+        return render_template('charade-manipulation', charade_id=id, charade=charade['charade'], answer=charade['answer'])
+
+    elif request.method == 'POST':
+
+        userCharade = request.form.get('userCharade')
+        userAnswer = request.form.get('userAnswer')
+
+        try:
+            document = db.collection('charades').document(id)
+            
+            new_data = {'answer': userAnswer, 'charade': userCharade}
+            document.update(new_data)
+        
+            e = None
+
+        except Exception as e:
+            print(f'Back-End Error: {e}')
+
+        finally:
+ 
+            if not e:
+                return render_template('charade-manipulation', msg=f'Charade edited at ID {id}!')
+            
+            else:
+                return render_template('charade-manipulation', msg=f'ERROR: Something went wrong.')

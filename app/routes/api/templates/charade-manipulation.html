@@ -8,22 +8,22 @@
 
 {% block content %}
 
-<form class="flex gap-6 flex-col justify-center transition duration-200 py-5" method="post" action="/api/new-charade">
+<form class="flex gap-6 flex-col justify-center transition duration-200 py-5" method="post" action="{% if charade_id and charade and answer %}/api/edit-charade/{{ charade_id }}{% else %}/api/new-charade{% endif %}">
     
     <div class="w-full" id="charadeField">
-        <p class="text-center text-2xl font-bold text-black">Qual será a charada de hoje?</p>
+        <p class="text-center text-2xl font-bold text-transparent" id="charade">Qual será a charada de hoje?</p>
     </div>
 
     <div class="flex flex-col gap-2 items-center">
         <div class="flex justify-center">
-            <input name="userCharade" type="text" id="userCharade" class="border-2 border-green-500 w-[50vw] p-2 rounded-xl" placeholder="Your Charade">
+            <input name="userCharade" value="{{ charade }}" type="text" id="userCharade" class="border-2 border-green-500 w-[50vw] p-2 rounded-xl" placeholder="Your Charade">
         </div>
 
     </div>
 
     <div class="flex flex-col gap-2 items-center">
         <div class="flex justify-center">
-            <input name="userAnswer" type="text" id="userAnswer" class="border-2 border-e-0 border-green-500 p-2 rounded-s-xl" placeholder="Your Answer">
+            <input name="userAnswer" type="text" value="{{ answer }}" id="userAnswer" class="border-2 border-e-0 border-green-500 p-2 rounded-s-xl" placeholder="Your Answer">
             <button type="submit" id="verifyButton" class="bg-transparent border-2 border-green-500 rounded-e-xl text-green-500 transition duration-200 p-2 hover:text-white hover:bg-green-500">Register Charade</button>
         </div>
     
@@ -33,5 +33,10 @@
     
     <p id="answerResult" class="text-center text-black">{% if msg %}{{msg}}{% endif %}</p>
 </form> 
+{% if charade_id %}
+<script type="text/javascript">
+    let charade_id = '{{ charade_id }}';
+</script>
+{% endif %}
 
 {% endblock %}

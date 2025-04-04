@@ -4,13 +4,13 @@ const resultElement = document.querySelector("#answerResult") ;
 
 async function getCharade() {
     try {
-        
+
         document.querySelector('#charade').style.color = 'transparent';
         resultElement.style.color = 'transparent'
         userAnswer.value = ''
         const url = `https://charader-senai.vercel.app/api/charades`;
-        const id = document.querySelector('#charadeId').value || false
-        
+        const id = charade_id ? charade_id : document.querySelector('#charadeId').value || false
+
         const response = id ? await fetch(`${url}/${id}`) : await fetch(url) ;
         
         data = await response.json();
