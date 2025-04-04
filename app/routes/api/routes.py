@@ -103,7 +103,7 @@ def new_charade():
             else:
                 return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
             
-@api.route('/api/delete-charade/<int:id>', methods=['POST'])
+@api.route('/api/delete-charade/<int:id>', methods=['GET'])
 def delete_charade(id):
     try:
         charade_ref = db.collection('charades').document(str(id)) # Get a reference to the document
