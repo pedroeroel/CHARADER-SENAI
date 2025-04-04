@@ -141,6 +141,17 @@ def edit_charade(id):
         userCharade = request.form.get('userCharade')
         userAnswer = request.form.get('userAnswer')
 
+        charades = []
+        charadeList = db.collection('charades').stream()
+
+        for charade in charadeList:
+            charades.append(charade.to_dict())
+
+        for charade in charades:
+            if charade['id'] == id:
+                charade = charade
+                break
+
         try:
             document = db.collection('charades').document(f'{id}')
             
@@ -154,4 +165,4 @@ def edit_charade(id):
             return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
 
         finally:
-            return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
+            return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!', charade_id=id, charade=charade['charade'], answer=charade['answer'])
