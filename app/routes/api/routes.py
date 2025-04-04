@@ -103,37 +103,21 @@ def new_charade():
             else:
                 return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
             
-@api.route('/api/delete-charade/<int:id>', methods=['GET',])
+@api.route('/api/delete-charade/<int:id>', methods=['POST'])
 def delete_charade(id):
-
     try:
-        charades = []
-        charadeList = db.collection('charades').stream()
+        charade_ref = db.collection('charades').document(str(id)) # Get a reference to the document
+        charade_doc = charade_ref.get() # Try to get the document
 
-        for charade in charadeList:
-            charades.append(charade.to_dict())
-        
-        charades.sort(key=lambda charade: int(charade['id']))
-
-        for charade in charades:
-            if charade['id'] == id:
-                charade=True
-                break
-            else:
-                charade=False
-
-        db.collection('charades').document(f'{id}').delete()
-        
+        if charade_doc.exists:
+            charade_ref.delete()
+            return render_template('charade-manipulation.html', msg=f'Charade with ID {id} deleted!')
+        else:
+            return render_template('charade-manipulation.html', msg=f'Error: Charade with ID {id} not found.')
 
     except Exception as e:
         print(f'Error at deletion: {e}')
-
-    if charade == True:
-        
-        return render_template('charade-manipulation.html', msg='Charade deleted!')
-
-    else:
-        return render_template('charade-manipulation.html', msg='Error at deletion.')
+        return render_template('charade-manipulation.html', msg='Error during deletion.')
 
 @api.route('/api/edit-charade/<int:id>')
 def edit_charade(id):
