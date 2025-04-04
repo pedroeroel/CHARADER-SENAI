@@ -107,21 +107,22 @@ def new_charade():
 def delete_charade(id):
 
     try:
-        db.collection('charades').document(f'{id}').delete()
         charades = []
         charadeList = db.collection('charades').stream()
 
         for charade in charadeList:
             charades.append(charade.to_dict())
+        
+        charades.sort(key=lambda charade: int(charade['id']))
+
+        for charade in charadeList:
             if charades[id-1]['id'] == id:
                 charade=True
                 break
             else:
                 charade=False
 
-        print(charades)
-
-        charades.sort(key=lambda charade: int(charade['id']))
+        db.collection('charades').document(f'{id}').delete()
         
 
     except Exception as e:
