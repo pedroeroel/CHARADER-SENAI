@@ -151,11 +151,7 @@ def edit_charade(id):
 
         except Exception as e:
             print(f'Back-End Error: {e}')
+            return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
 
         finally:
- 
-            if e:
-                return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
-            
-            else:
-                return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
+            return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
