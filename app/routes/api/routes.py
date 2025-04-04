@@ -115,8 +115,8 @@ def delete_charade(id):
         
         charades.sort(key=lambda charade: int(charade['id']))
 
-        for charade in charadeList:
-            if charades[id-1]['id'] == id:
+        for charade in charades:
+            if charade['id'] == id:
                 charade=True
                 break
             else:
