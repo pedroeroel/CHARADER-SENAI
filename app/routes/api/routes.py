@@ -154,8 +154,8 @@ def edit_charade(id):
 
         finally:
  
-            if not e:
-                return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
+            if e:
+                return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
             
             else:
-                return render_template('charade-manipulation.html', msg=f'ERROR: Something went wrong.')
+                return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!')
