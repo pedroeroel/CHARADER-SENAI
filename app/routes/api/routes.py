@@ -93,9 +93,9 @@ def charade():
             print(f'Back-End Error: {e}')
         finally:
             if not e:
-                return jsonify('Charade registered at ID {newID}!')
+                return jsonify('message': 'Charade registered at ID {newID}!')
             else:
-                return jsonify('ERROR: Something went wrong.')
+                return jsonify('message': 'ERROR! Something went wrong.')
 
 @api.route('/api/charades/<int:id>', methods=['GET'])
 def charadeByID(id):
