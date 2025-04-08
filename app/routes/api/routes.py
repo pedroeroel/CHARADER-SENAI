@@ -120,7 +120,7 @@ def charadeByID(id):
             return jsonify({'message': 'ERROR! Both charade and answer are required for update.'}), 400
 
         try:
-            db.collection('charades').document(id).update({
+            db.collection('charades').document(f'{id}').update({
                 'answer': updated_answer,
                 'charade': updated_charade
             })
@@ -136,7 +136,7 @@ def charadeByID(id):
             return jsonify({'message': 'ERROR! Database not connected.'}), 500
 
         try:
-            db.collection('charades').document(id).delete()
+            db.collection('charades').document(f'{id}').delete()
             return jsonify({'message': f'Charade with ID {id} deleted successfully!'}), 200
         except Exception as e:
             return jsonify({'message': f'ERROR! Could not delete charade with ID {id}: {str(e)}'}), 500
