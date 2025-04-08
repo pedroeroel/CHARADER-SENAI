@@ -6,7 +6,7 @@ import random
 from flask_cors import CORS
 import json
 
-api = Blueprint('api', __name__, template_folder='templates', )
+api = Blueprint('api', __name__, template_folder='templates')
 
 serviceAccountKeyContent = os.environ.get('serviceAccountKey')
 serviceAccountKeyPath = 'app/routes/api/key/serviceAccountKey.json'
@@ -29,11 +29,11 @@ else:
 
 db = firestore.client()
 
-allowed_origins = ['https://charader-senai.vercel.app/',
+allowed_origins = ['https://charader-senai.vercel.app',
+                   'https://pedroeroel.github.io',
                    'http://127.0.0.1:5000',
                    'null',
-                   'https://pedroeroel.github.io/',
-                   'https://charader-front-end.vercel.app/']
+                   'https://charader-front-end.vercel.app']
 
 CORS(api, resources={r"/*": {'origins': allowed_origins}})
 
