@@ -31,7 +31,9 @@ db = firestore.client()
 
 allowed_origins = ['https://charader-senai.vercel.app/',
                    'http://127.0.0.1:5000',
-                   'null']
+                   'null',
+                   'https://pedroeroel.github.io',
+                   'https://charader-front-end.vercel.app/']
 
 CORS(api, resources={r"/*": {'origins': allowed_origins}})
 
