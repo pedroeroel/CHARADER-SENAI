@@ -106,7 +106,6 @@ def charadeByID(id):
         return jsonify({'error': f'Charade with ID {id} not found.'}), 404
         
     elif request.method == 'PUT':
-        id
         if not id:
             return jsonify({'message': 'ERROR! Charade ID is required for update.'}), 400
 
@@ -130,7 +129,6 @@ def charadeByID(id):
             return jsonify({'message': f'ERROR! Could not update charade with ID {id}: {str(e)}'}), 500
 
     elif request.method == 'DELETE':
-        id = request.args.get('id') 
         if not id:
             return jsonify({'message': 'ERROR! Charade ID is required for deletion.'}), 400
 
