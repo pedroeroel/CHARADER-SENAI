@@ -57,7 +57,7 @@ def random_charade():
 @api.route('/api/charades/<int:id>', methods=['GET'])
 def charade(id):
     if request.method == 'GET':
-            
+
         charades = []
         charadeList = db.collection('charades').stream()
 
@@ -66,7 +66,9 @@ def charade(id):
 
         for charade in charades:
             if charade['id'] == id:
-                return jsonify(charade)
+                return jsonify(charade), 200
+            
+        return jsonify({'error': f'Charade with ID {id} not found.'}), 404
 
 @api.route('/api/new-charade', methods=['GET', 'POST'])
 def new_charade():
