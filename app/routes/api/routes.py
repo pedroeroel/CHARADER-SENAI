@@ -41,7 +41,7 @@ CORS(api, resources={r"/*": {'origins': allowed_origins}})
 def status():
     return 'The API is currently online.', 200
 
-@api.route('/api/charades', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@api.route('/api/charades', methods=['GET', 'POST'])
 def charade():
     if request.method == 'GET':
         charades = []
@@ -89,7 +89,6 @@ def charade():
         except Exception as e:
             return jsonify({'message': f'ERROR! Could not save charade: {str(e)}'}), 500
 
-
 @api.route('/api/charades/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def charadeByID(id):
     if request.method == 'GET':
@@ -107,8 +106,8 @@ def charadeByID(id):
         return jsonify({'error': f'Charade with ID {id} not found.'}), 404
         
     elif request.method == 'PUT':
-        charade_id = request.args.get('id') 
-        if not charade_id:
+        id
+        if not id:
             return jsonify({'message': 'ERROR! Charade ID is required for update.'}), 400
 
         if not db:
@@ -122,27 +121,27 @@ def charadeByID(id):
             return jsonify({'message': 'ERROR! Both charade and answer are required for update.'}), 400
 
         try:
-            db.collection('charades').document(charade_id).update({
+            db.collection('charades').document(id).update({
                 'answer': updated_answer,
                 'charade': updated_charade
             })
-            return jsonify({'message': f'Charade with ID {charade_id} updated successfully!'}), 200
+            return jsonify({'message': f'Charade with ID {id} updated successfully!'}), 200
         except Exception as e:
-            return jsonify({'message': f'ERROR! Could not update charade with ID {charade_id}: {str(e)}'}), 500
+            return jsonify({'message': f'ERROR! Could not update charade with ID {id}: {str(e)}'}), 500
 
     elif request.method == 'DELETE':
-        charade_id = request.args.get('id') 
-        if not charade_id:
+        id = request.args.get('id') 
+        if not id:
             return jsonify({'message': 'ERROR! Charade ID is required for deletion.'}), 400
 
         if not db:
             return jsonify({'message': 'ERROR! Database not connected.'}), 500
 
         try:
-            db.collection('charades').document(charade_id).delete()
-            return jsonify({'message': f'Charade with ID {charade_id} deleted successfully!'}), 200
+            db.collection('charades').document(id).delete()
+            return jsonify({'message': f'Charade with ID {id} deleted successfully!'}), 200
         except Exception as e:
-            return jsonify({'message': f'ERROR! Could not delete charade with ID {charade_id}: {str(e)}'}), 500
+            return jsonify({'message': f'ERROR! Could not delete charade with ID {id}: {str(e)}'}), 500
         
 @api.route('/api/new-charade', methods=['GET', 'POST'])
 def new_charade():
