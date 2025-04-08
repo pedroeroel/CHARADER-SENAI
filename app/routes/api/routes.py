@@ -41,46 +41,6 @@ CORS(api, resources={r"/*": {'origins': allowed_origins}})
 def status():
     return 'The API is currently online.', 200
 
-from flask import Flask, Blueprint, render_template, request, jsonify, redirect
-import firebase_admin
-from firebase_admin import credentials, firestore
-import os
-import random
-from flask_cors import CORS
-import json
-
-api = Blueprint('api', __name__, template_folder='templates', )
-
-serviceAccountKeyContent = os.environ.get('serviceAccountKey')
-serviceAccountKeyPath = 'app/routes/api/key/serviceAccountKey.json'
-
-if serviceAccountKeyContent:
-    cred = credentials.Certificate(json.loads(serviceAccountKeyContent))
-elif serviceAccountKeyPath:
-    cred = credentials.Certificate(serviceAccountKeyPath)
-else:
-    print('Error: serviceAccountKey not found.')
-    cred = None
-
-if cred:
-    firebase_admin.initialize_app(cred)
-else:
-    print("Firebase Admin SDK couldn't initialized.")
-
-db = firestore.client()
-
-allowed_origins = ['https://charader-senai.vercel.app/',
-                    'http://127.0.0.1:5000',
-                    'null',
-                    'https://pedroeroel.github.io',
-                    'https://charader-front-end.vercel.app/']
-
-CORS(api, resources={r"/*": {'origins': allowed_origins}})
-
-@api.route('/api', methods=['GET'])
-def status():
-    return 'The API is currently online.', 200
-
 @api.route('/api/charades', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def charade():
     if request.method == 'GET':
