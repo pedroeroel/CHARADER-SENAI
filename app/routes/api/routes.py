@@ -169,3 +169,16 @@ def edit_charade(id):
 
         finally:
             return render_template('charade-manipulation.html', msg=f'Charade edited at ID {id}!', charade_id=id, charade=charade['charade'], answer=charade['answer'])
+        
+@api.route('/api/charades/list', methods=['GET'])
+def list_charades():
+    charades = []
+    charadeList = db.collection('charades').stream()
+
+    for charade in charadeList:
+        charades.append(charade.to_dict())
+
+    if charades:
+        return jsonify(charades), 200
+    else:
+        return jsonify('ERROR! No charades found.'), 404
