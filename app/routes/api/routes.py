@@ -39,23 +39,66 @@ CORS(api, resources={r"/*": {'origins': allowed_origins}})
 def status():
     return 'The API is currently online.', 200
 
-@api.route('/api/charades', methods=['GET'])
-def random_charade():
+@api.route('/api/charades', methods=['GET', 'POST'])
+def charade():
 
-    charades = []
-    charadeList = db.collection('charades').stream()
+    if request.method == 'GET':
+        charades = []
+        charadeList = db.collection('charades').stream()
 
-    for charade in charadeList:
-        charades.append(charade.to_dict())
+        for charade in charadeList:
+            charades.append(charade.to_dict())
 
-    if charades:
-        return jsonify(random.choice(charades)), 200
-    
-    else:
-        return jsonify('ERROR! Charade not found.'), 404
+        if charades:
+            return jsonify(random.choice(charades)), 200
+        
+        else:
+            return jsonify('ERROR! Charade not found.'), 404
+        
+    elif request.method == 'POST':
+        if not db:
+            return jsonify({'message': 'ERROR! Database not connected.'}), 500
+
+        data = request.get_json()
+        userCharade = data.get('charade')
+        userAnswer = data.get('answer')
+
+        if not userCharade or not userAnswer:
+            return jsonify({'message': 'ERROR! Both charade and answer are required.'}), 400
+
+        charades = []
+        charadeList = db.collection('charades').stream()
+
+        for charade in charadeList:
+            charades.append(charade.to_dict())
+
+        charades.sort(key=lambda charade: int(charade['id']))
+
+        newID = 1
+
+        for charade in charades:
+            if int(charade['id']) == newID:
+                newID += 1
+            elif int(charade['id']) > newID:
+                break
+
+        try:
+            register = db.collection("charades").document(f"{newID}")
+            register.set({'answer': userAnswer, 'id': str(newID), 'charade': userCharade})
+            return jsonify({'message': 'Charade created successfully!'}), 201
+        except Exception as e:
+            return jsonify({'message': f'ERROR! Could not save charade: {str(e)}'}), 500
+
+        except Exception as e:
+            print(f'Back-End Error: {e}')
+        finally:
+            if not e:
+                return jsonify('Charade registered at ID {newID}!')
+            else:
+                return jsonify('ERROR: Something went wrong.')
 
 @api.route('/api/charades/<int:id>', methods=['GET'])
-def charade(id):
+def charadeByID(id):
     if request.method == 'GET':
 
         charades = []
