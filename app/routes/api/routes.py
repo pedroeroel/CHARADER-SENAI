@@ -89,6 +89,23 @@ def charade():
         except Exception as e:
             return jsonify({'message': f'ERROR! Could not save charade: {str(e)}'}), 500
 
+
+@api.route('/api/charades/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def charadeByID(id):
+    if request.method == 'GET':
+
+        charades = []
+        charadeList = db.collection('charades').stream()
+
+        for charade in charadeList:
+            charades.append(charade.to_dict())
+
+        for charade in charades:
+            if charade['id'] == id:
+                return jsonify(charade), 200
+            
+        return jsonify({'error': f'Charade with ID {id} not found.'}), 404
+        
     elif request.method == 'PUT':
         charade_id = request.args.get('id') 
         if not charade_id:
@@ -126,24 +143,7 @@ def charade():
             return jsonify({'message': f'Charade with ID {charade_id} deleted successfully!'}), 200
         except Exception as e:
             return jsonify({'message': f'ERROR! Could not delete charade with ID {charade_id}: {str(e)}'}), 500
-
-
-@api.route('/api/charades/<int:id>', methods=['GET'])
-def charadeByID(id):
-    if request.method == 'GET':
-
-        charades = []
-        charadeList = db.collection('charades').stream()
-
-        for charade in charadeList:
-            charades.append(charade.to_dict())
-
-        for charade in charades:
-            if charade['id'] == id:
-                return jsonify(charade), 200
-            
-        return jsonify({'error': f'Charade with ID {id} not found.'}), 404
-
+        
 @api.route('/api/new-charade', methods=['GET', 'POST'])
 def new_charade():
     if request.method == 'GET':
